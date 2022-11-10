@@ -25,15 +25,15 @@ public class WebClientExampleController {
     @PostMapping("/users")
     public User createUser (@RequestBody NewUser newUser) {
         User user = WebClient
-            .builder()
-            .baseUrl("https://reqres.in")
-            .build()
-            .method(HttpMethod.DELETE)
-            .uri("/api/users")
-            .bodyValue(newUser)
+            .builder() // Startet den bau vom HTTP request
+            .baseUrl("https://reqres.in") // Definiert die domain
+            .build() // startet die Einstellungen
+            .method(HttpMethod.POST) // Sagt welche HTTP Methode wir ausführen wollen
+            .uri("/api/users") // Sagt welchen Endpunkt wir auf die baseUrl "drauf kleben" wollen
+            .bodyValue(newUser) // Sagt welchen JSON wir mitschicken wollen
             .exchangeToMono(
-                    clientResponse -> clientResponse.bodyToMono(User.class)
-            ).block();
+                    clientResponse -> clientResponse.bodyToMono(User.class) // Formatiert die Antwort vom Server in unser Objekt
+            ).block(); // Führt den Request aus
 
         return user;
     }
