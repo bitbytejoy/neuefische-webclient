@@ -37,4 +37,32 @@ public class WebClientExampleController {
 
         return user;
     }
+
+    @GetMapping("/do-something")
+    public Success doSomething () {
+        Animal animal = WebClient
+                .builder()
+                .baseUrl("https://eoq2vuf7lltn3qi.m.pipedream.net")
+                .build()
+                .method(HttpMethod.GET)
+                .uri("/5")
+                .exchangeToMono(
+                        clientResponse -> clientResponse.bodyToMono(Animal.class)
+                ).block();
+
+        Message message = new Message(10, animal.toString());
+
+        Success success = WebClient
+                .builder() // Startet den bau vom HTTP request
+                .baseUrl("https://eolhzflzeqdbtg3.m.pipedream.net") // Definiert die domain
+                .build() // startet die Einstellungen
+                .method(HttpMethod.POST) // Sagt welche HTTP Methode wir ausführen wollen
+                .uri("") // Sagt welchen Endpunkt wir auf die baseUrl "drauf kleben" wollen
+                .bodyValue(message) // Sagt welchen JSON wir mitschicken wollen
+                .exchangeToMono(
+                        clientResponse -> clientResponse.bodyToMono(Success.class) // Formatiert die Antwort vom Server in unser Objekt
+                ).block();
+
+        return success;
+    }
 }
